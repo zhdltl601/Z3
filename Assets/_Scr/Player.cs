@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public PlayerInventory inventory;
+    
+    public static List<Player> players;
 
-    // Update is called once per frame
-    void Update()
+    public void KillMyself()
     {
-        
+        print("fuck died");
     }
+
 }
