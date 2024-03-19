@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
     private void PlayerInput()
     {
         dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        print(dir);
         
         if (Input.GetKeyDown(KeyCode.Space)) Shoot();
 

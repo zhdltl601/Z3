@@ -9,7 +9,7 @@ public class Gun : WeaponBehavior
         OnM1 += Ming;
         OnM2 += Ming2;
     }
-    public virtual void Shoot()
+    protected virtual void Shoot()
     {
 
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     public List<WeaponBehavior> weapons;
+    public List<ItemBehavior> items;
 
     private void Update()
     {
