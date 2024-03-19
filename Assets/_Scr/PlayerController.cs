@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float speedRun;
     public float speedMax;
     private float speed;
+    private bool isAiming = false;
 
     [Header("Fuck")]
     public Vector3 gay;
@@ -23,9 +24,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 dir;
     private Camera cam;
     private Transform camTransform;
+    private Transform visual;
     #endregion
     private void Start()
     {
+        visual = transform.Find("Vis");
         speed = speedWalk;
         rigidBody = GetComponent<Rigidbody>();
         cam = Camera.main;
@@ -36,11 +39,20 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         PlayerInput();
-        PlayerMove();
-        PlayerLook();
         PlayerMouse();
 
+        if(!isAiming) PlayerMove();
         //camTransform.rotation = Quaternion.RotateTowards(camTransform.rotation, originalPosition, Time.deltaTime * 5); //recoil beta
+    }
+
+    private void FixedUpdate()
+    {
+        PlayerLook();
+    }
+
+    private void LateUpdate()
+    {
+        camTransform.position = transform.position;
     }
 
     private void PlayerInput()
@@ -50,7 +62,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) Shoot();
 
         if (Input.GetKey(KeyCode.LeftShift)) PlayerAim();
-        else camTransform.position = Vector3.MoveTowards(camTransform.position, transform.position, 15 * Time.deltaTime);
 
         if (Input.GetKeyDown(KeyCode.R)) Reload();
     }
@@ -64,6 +75,13 @@ public class PlayerController : MonoBehaviour
     private void PlayerLook()
     {
         //vis
+        Vector3 playerLookDirection = mouse.transform.position - transform.position;
+        playerLookDirection = playerLookDirection.normalized;
+
+        float needToRotateDeg = Mathf.Atan2(playerLookDirection.z,
+            playerLookDirection.x) * Mathf.Rad2Deg;
+
+        vis.transform.rotation = Quaternion.Euler(0, -(needToRotateDeg + 270f), 0);
     }
     private void PlayerMove()
     {
@@ -71,6 +89,8 @@ public class PlayerController : MonoBehaviour
     }
     private void PlayerAim()
     {
+        isAiming = true;
+        rigidBody.velocity = Vector3.zero;
         camTransform.position = Vector3.Lerp(transform.position, mouse.transform.position, 0.4f);
     }
     private void Reload()
