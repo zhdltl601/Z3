@@ -7,7 +7,4 @@ public abstract class WeaponBehavior : ItemBehavior
     public UnityAction OnM1;
     public UnityAction OnM2;
     public UnityAction OnZoom;
-
-
-
 }

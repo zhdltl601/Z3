@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
     {
 
     }
-    private void Shoot()
+    public void Shoot()
     {
         Vector3 a = mouse.transform.position - vis.transform.position;
         a.Normalize();
