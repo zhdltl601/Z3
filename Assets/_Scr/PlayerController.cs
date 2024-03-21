@@ -48,15 +48,15 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerLook();
-        if (isAiming)
-        {
-            camTransform.position += visual.forward * Time.deltaTime * 7f;
-        }
+        //if (isAiming)
+        //{
+        //    camTransform.position += visual.forward * Time.deltaTime * 7f;
+        //}
     }
 
     private void LateUpdate()
     {
-        if (isAiming) return;
+        //if (isAiming) return;
         camTransform.position = transform.position;
     }
 
