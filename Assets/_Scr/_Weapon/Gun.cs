@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class Gun : WeaponBehavior
 {
-    protected Vector3 mousePos;
+    [SerializeField] private float vibrationIntensity;
     public Transform firePos;
-    public Transform handTrm;
     public GameObject ammo;
     public int maxAmmo;
     protected int currentAmmo;
@@ -15,22 +14,8 @@ public class Gun : WeaponBehavior
 
     private void Awake()
     {
-        //OnM1 += Ming;
-        //OnM2 += Ming2;
         player = transform.root.GetComponent<PlayerController>();
         InitGun();
-    }
-
-    private void Update()
-    {
-        GetMouseZVec();
-    }
-
-    private void GetMouseZVec()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y,
-            -mousePosition.z));
     }
 
     protected virtual void InitGun()
@@ -40,6 +25,6 @@ public class Gun : WeaponBehavior
 
     protected virtual void Shoot()
     {
-        player.Shoot();
+        player.Shoot(vibrationIntensity);
     }
 }
