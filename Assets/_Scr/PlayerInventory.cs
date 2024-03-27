@@ -11,7 +11,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            weapons[0].OnM1();
+            weapons[0].OnM1?.Invoke();
         }
         else if (Input.GetKeyDown(KeyCode.Mouse1))
         {

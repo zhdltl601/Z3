@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [Header("Fuck")]
     public Vector3 gay;
     private Quaternion originalPosition;
+    private Vector3 objectPosition;
     #endregion
     #region comp
     [Header("Mouse")]
@@ -40,28 +41,31 @@ public class PlayerController : MonoBehaviour
     {
         PlayerInput();
         PlayerMouse();
-
-        if(!isAiming) PlayerMove();
+        PlayerMove();
         //camTransform.rotation = Quaternion.RotateTowards(camTransform.rotation, originalPosition, Time.deltaTime * 5); //recoil beta
     }
 
     private void FixedUpdate()
     {
         PlayerLook();
+        //if (isAiming)
+        //{
+        //    camTransform.position += visual.forward * Time.deltaTime * 7f;
+        //}
     }
 
     private void LateUpdate()
     {
+        //if (isAiming) return;
         camTransform.position = transform.position;
     }
 
     private void PlayerInput()
     {
         dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        
-        if (Input.GetKeyDown(KeyCode.Space)) Shoot();
 
         if (Input.GetKey(KeyCode.LeftShift)) PlayerAim();
+        else isAiming = false;
 
         if (Input.GetKeyDown(KeyCode.R)) Reload();
     }
@@ -69,11 +73,11 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = 10;
-        Vector3 objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         mouse.transform.position = objectPosition;
     }
     private void PlayerLook()
-    {
+    {    
         //vis
         Vector3 playerLookDirection = mouse.transform.position - transform.position;
         playerLookDirection = playerLookDirection.normalized;
@@ -85,19 +89,25 @@ public class PlayerController : MonoBehaviour
     }
     private void PlayerMove()
     {
-        rigidBody.velocity = dir * speed;
+        if (isAiming)
+        {
+            rigidBody.velocity = dir * speed * 0.3f;
+        }
+        else
+        {
+            rigidBody.velocity = dir * speed;
+        }
     }
     private void PlayerAim()
     {
         isAiming = true;
         rigidBody.velocity = Vector3.zero;
-        camTransform.position = Vector3.Lerp(transform.position, mouse.transform.position, 0.4f);
     }
     private void Reload()
     {
 
     }
-    private void Shoot()
+    public void Shoot(float force)
     {
         Vector3 a = mouse.transform.position - vis.transform.position;
         a.Normalize();
@@ -105,24 +115,26 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(vis.transform.position, a, Color.red, 0.5f);
 
         //camTransform.rotation *= Quaternion.Euler(gay);
-        Recoil();
+        Recoil(force);
     }
-    private void Recoil()
+    private void Recoil(float shootForce)
     {
         StopAllCoroutines();
-        StartCoroutine(Reco());
+        StartCoroutine(Reco(shootForce));
     }
-    private IEnumerator Reco()
+    private IEnumerator Reco(float shootForce)
     {
         float timer = 0;
         while(timer <= 0.1f)
         {
             yield return null;
             timer += Time.deltaTime;
-            Vector3 ra = Random.insideUnitSphere * 0.35f;
+            Vector3 ra = Random.insideUnitSphere * shootForce;
             ra.y = 10;
             cam.transform.localPosition = ra;
         }
         cam.transform.localPosition = new Vector3(0,10,0);
+        yield return new WaitForSeconds(0.5f);
+        isAiming = false;
     }
 }
